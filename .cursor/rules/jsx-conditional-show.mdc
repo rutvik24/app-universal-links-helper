@@ -1,0 +1,58 @@
+---
+description: Use Show for all conditional JSX instead of inline && or ternary
+globs: "**/*.{tsx,jsx}"
+alwaysApply: false
+---
+
+# Conditional JSX with `Show`
+
+Never use inline `condition && <El />` or `condition ? <A /> : <B />` in JSX trees. Always wrap conditionals in the shared `Show` component.
+
+## Component
+
+- Prefer importing `Show` from `@/components/show` (or the project’s equivalent path).
+- If `Show` does not exist, create it before adding conditional JSX.
+- API:
+  - `condition: boolean` — when to render the true branch
+  - `children` — content when `condition` is true
+  - `fallback?: ReactNode` — content when false (default `null`)
+- Implement `Show` with a **ternary** internally: `condition ? children : fallback`
+
+```tsx
+// components/show.tsx
+import type { ReactNode } from "react";
+
+type ShowProps = {
+  condition: boolean;
+  children: ReactNode;
+  fallback?: ReactNode;
+};
+
+export function Show({ condition, children, fallback = null }: ShowProps) {
+  return <>{condition ? children : fallback}</>;
+}
+```
+
+## Usage
+
+```tsx
+// ❌ BAD
+{isOpen && <Panel />}
+{isAdmin ? <AdminNav /> : <UserNav />}
+
+// ✅ GOOD
+<Show condition={isOpen}>
+  <Panel />
+</Show>
+
+// ✅ GOOD — false branch via fallback
+<Show condition={isAdmin} fallback={<UserNav />}>
+  <AdminNav />
+</Show>
+```
+
+## Rules
+
+- One concern: conditional rendering only — do not put business logic inside `Show`.
+- Keep `condition` a boolean (coerce at the call site if needed: `Boolean(x)`, `x != null`).
+- Do not invent alternate helpers (`If`, `When`, etc.) unless migrating; extend `Show` instead.
