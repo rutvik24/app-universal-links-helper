@@ -21,6 +21,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Required so Pages accepts Actions deployments (avoids stuck deployment_queued).
+      # See: https://github.com/orgs/community/discussions/49948
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
