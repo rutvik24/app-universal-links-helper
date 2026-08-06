@@ -52,16 +52,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # Unwedge a cancelled in-progress Pages deploy that blocked subsequent runs.
-      - name: Cancel stuck Pages deployment
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api --method POST \
-            "repos/${{ github.repository }}/pages/deployment/cancel/ec5fcb8cd3814001663bf94773f2382b1b5c7065" \
-            || true
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
