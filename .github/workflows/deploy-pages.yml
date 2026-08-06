@@ -5,26 +5,21 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Push static export to gh-pages (avoids stuck/fake-success deploy-pages).
+# See: https://github.com/orgs/community/discussions/49948
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Required so Pages accepts Actions deployments (avoids stuck deployment_queued).
-      # See: https://github.com/orgs/community/discussions/49948
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -45,18 +40,9 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
         run: bun run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          force_orphan: true
