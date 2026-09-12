@@ -78,55 +78,68 @@ export function AasaComponentsEditor({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 rounded-lg border border-[var(--line)] bg-[var(--surface-subtle)]/50 p-4">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium text-[var(--ink)]">
-          AASA components
-        </p>
-        <button type="button" onClick={addComponent} className="action-btn">
-          Add component
+        <div className="flex items-center gap-2">
+          <span className="flex size-2 rounded-full bg-[var(--ios-accent)]" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--ink)]">
+            AASA Component Rules Matrix (iOS 13+)
+          </p>
+          <span className="rounded-full bg-[var(--ios-tint)] px-2 py-0.5 text-[10px] font-bold text-[var(--ios-accent)] border border-[var(--ios-border)]">
+            {components.length} {components.length === 1 ? "component" : "components"}
+          </span>
+        </div>
+        <button type="button" onClick={addComponent} className="action-btn action-btn-ios text-xs">
+          + Add Component
         </button>
       </div>
-      <p className="text-xs text-[var(--muted)]">
-        Per-rule path (
-        <code className="font-mono text-[0.85em]">/</code>), query (
-        <code className="font-mono text-[0.85em]">?</code>
-        ), fragment (
-        <code className="font-mono text-[0.85em]">#</code>
-        ), exclude, and comment — matching Apple sample shapes. Query is
-        per-component, not global. Path is optional for fragment-only rules.
-        Use{" "}
-        <strong className="font-medium text-[var(--ink)]">Load sample data</strong>{" "}
-        above to fill path, query, and exclude examples at once.
+
+      <p className="text-xs leading-relaxed text-[var(--muted)]">
+        Modern Apple AASA component matcher format with per-rule path (
+        <code className="font-mono text-[0.8em]">/</code>), query params (
+        <code className="font-mono text-[0.8em]">?</code>), fragment (
+        <code className="font-mono text-[0.8em]">#</code>), exclusion rules, and comments.
       </p>
 
       <Show
         condition={components.length > 0}
         fallback={
-          <p className="rounded-md border border-dashed border-[var(--line)] px-3 py-4 text-center text-sm text-[var(--muted)]">
-            No components — add one or paste a test URL to suggest a rule.
-          </p>
+          <div className="rounded-md border border-dashed border-[var(--line)] px-4 py-5 text-center text-xs text-[var(--muted)]">
+            No components — click Add Component or paste a test URL above to generate a rule.
+          </div>
         }
       >
         <ul className="flex flex-col gap-3">
           {components.map((component, index) => {
             const queryPairs = queryToPairs(component["?"]);
+            const isExcluded = Boolean(component.exclude);
             return (
               <li
                 key={`aasa-component-${index}`}
-                className="flex flex-col gap-3 rounded-md border border-[var(--line)] bg-[var(--surface)]/60 p-3"
+                className={`flex flex-col gap-3 rounded-lg border p-3.5 shadow-xs transition-all ${
+                  isExcluded
+                    ? "border-amber-500/30 bg-amber-500/5"
+                    : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--line-strong)]"
+                }`}
               >
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <span className="text-xs font-medium uppercase tracking-wide text-[var(--muted)]">
-                    Component {index + 1}
-                  </span>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold tracking-wide uppercase text-[var(--muted)]">
+                      Component #{index + 1}
+                    </span>
+                    <Show condition={isExcluded}>
+                      <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                        EXCLUDED RULE
+                      </span>
+                    </Show>
+                  </div>
                   <button
                     type="button"
                     onClick={() => removeComponent(index)}
-                    className="action-btn"
+                    className="action-btn text-xs hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
                     aria-label={`Remove component ${index + 1}`}
                   >
-                    Remove
+                    Delete Component
                   </button>
                 </div>
 
@@ -134,10 +147,9 @@ export function AasaComponentsEditor({
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor={`aasa-path-${index}`}
-                      className="text-xs font-medium text-[var(--muted)]"
+                      className="text-[11px] font-medium text-[var(--muted)]"
                     >
-                      Path{" "}
-                      <code className="font-mono text-[0.85em]">/</code>
+                      Path Pattern <code className="font-mono text-[0.8em]">/</code>
                     </label>
                     <input
                       id={`aasa-path-${index}`}
@@ -147,17 +159,16 @@ export function AasaComponentsEditor({
                       onChange={(e) =>
                         updateComponent(index, { "/": e.target.value })
                       }
-                      placeholder="* or /help/* (optional if # only)"
-                      className="field-input font-mono text-[0.85rem]"
+                      placeholder="* or /products/*"
+                      className="field-input font-mono text-xs"
                     />
                   </div>
                   <div className="flex flex-col gap-1">
                     <label
                       htmlFor={`aasa-fragment-${index}`}
-                      className="text-xs font-medium text-[var(--muted)]"
+                      className="text-[11px] font-medium text-[var(--muted)]"
                     >
-                      Fragment{" "}
-                      <code className="font-mono text-[0.85em]">#</code>
+                      URL Fragment <code className="font-mono text-[0.8em]">#</code>
                     </label>
                     <input
                       id={`aasa-fragment-${index}`}
@@ -168,39 +179,30 @@ export function AasaComponentsEditor({
                         updateComponent(index, { "#": e.target.value })
                       }
                       placeholder="e.g. *"
-                      className="field-input font-mono text-[0.85rem]"
+                      className="field-input font-mono text-xs"
                     />
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                {/* Query Matching Section */}
+                <div className="flex flex-col gap-2 rounded-md border border-[var(--line)] bg-[var(--surface-subtle)]/40 p-2.5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-medium text-[var(--muted)]">
-                      Query{" "}
-                      <code className="font-mono text-[0.85em]">?</code>{" "}
-                      (key → pattern; key may be{" "}
-                      <code className="font-mono text-[0.85em]">*</code>)
-                    </p>
+                    <span className="text-[11px] font-semibold text-[var(--ink-secondary)]">
+                      Query Parameters Matcher <code className="font-mono text-[0.8em]">?</code>
+                    </span>
                     <button
                       type="button"
                       onClick={() => addQueryPair(index)}
-                      className="action-btn"
+                      className="action-btn text-[11px] py-0.5 px-2"
                     >
-                      Add query
+                      + Query Pair
                     </button>
                   </div>
                   <Show
                     condition={queryPairs.length > 0}
                     fallback={
-                      <p className="text-xs text-[var(--muted)]">
-                        No query pairs — e.g.{" "}
-                        <code className="font-mono text-[0.8em]">
-                          *: *
-                        </code>{" "}
-                        or{" "}
-                        <code className="font-mono text-[0.8em]">
-                          articleNumber: ????
-                        </code>
+                      <p className="text-[11px] text-[var(--muted)] font-mono">
+                        No query rules (matches any or no query parameters).
                       </p>
                     }
                   >
@@ -213,9 +215,9 @@ export function AasaComponentsEditor({
                           <div className="flex min-w-[6rem] flex-1 flex-col gap-1">
                             <label
                               htmlFor={`aasa-qkey-${index}-${pairIndex}`}
-                              className="text-xs text-[var(--muted)]"
+                              className="text-[10px] text-[var(--muted)]"
                             >
-                              Key
+                              Key (e.g. * or id)
                             </label>
                             <input
                               id={`aasa-qkey-${index}-${pairIndex}`}
@@ -228,15 +230,15 @@ export function AasaComponentsEditor({
                                 })
                               }
                               placeholder="* or id"
-                              className="field-input font-mono text-[0.85rem]"
+                              className="field-input font-mono text-xs"
                             />
                           </div>
                           <div className="flex min-w-[6rem] flex-1 flex-col gap-1">
                             <label
                               htmlFor={`aasa-qval-${index}-${pairIndex}`}
-                              className="text-xs text-[var(--muted)]"
+                              className="text-[10px] text-[var(--muted)]"
                             >
-                              Value
+                              Value Pattern (* / ??? / ?*)
                             </label>
                             <input
                               id={`aasa-qval-${index}-${pairIndex}`}
@@ -248,17 +250,17 @@ export function AasaComponentsEditor({
                                   value: e.target.value,
                                 })
                               }
-                              placeholder="* · ??? · ?*"
-                              className="field-input font-mono text-[0.85rem]"
+                              placeholder="* or ????"
+                              className="field-input font-mono text-xs"
                             />
                           </div>
                           <button
                             type="button"
                             onClick={() => removeQueryPair(index, pairIndex)}
-                            className="action-btn mb-0.5"
+                            className="action-btn text-xs py-1 px-2 mb-0.5"
                             aria-label={`Remove query pair ${pairIndex + 1}`}
                           >
-                            Remove
+                            ×
                           </button>
                         </li>
                       ))}
@@ -266,27 +268,21 @@ export function AasaComponentsEditor({
                   </Show>
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                  <label className="flex items-center gap-2 text-sm text-[var(--muted)]">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <label className="flex items-center gap-2 text-xs font-medium text-[var(--ink)] cursor-pointer select-none">
                     <input
                       type="checkbox"
-                      checked={Boolean(component.exclude)}
+                      checked={isExcluded}
                       onChange={(e) =>
                         updateComponent(index, {
                           exclude: e.target.checked,
                         })
                       }
-                      className="accent-[var(--accent)]"
+                      className="accent-amber-500 rounded"
                     />
-                    Exclude
+                    <span>Exclude matching URLs (<code className="font-mono">exclude: true</code>)</span>
                   </label>
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <label
-                      htmlFor={`aasa-comment-${index}`}
-                      className="text-xs font-medium text-[var(--muted)]"
-                    >
-                      Comment
-                    </label>
                     <input
                       id={`aasa-comment-${index}`}
                       type="text"
@@ -296,8 +292,8 @@ export function AasaComponentsEditor({
                           comment: e.target.value,
                         })
                       }
-                      placeholder="Optional note for this rule"
-                      className="field-input text-[0.85rem]"
+                      placeholder="Comment / note (e.g. Block admin routes)"
+                      className="field-input text-xs"
                     />
                   </div>
                 </div>

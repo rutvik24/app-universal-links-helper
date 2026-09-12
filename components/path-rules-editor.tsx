@@ -41,53 +41,52 @@ export function PathRulesEditor({ rules, onChange }: PathRulesEditorProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 rounded-lg border border-[var(--line)] bg-[var(--surface-subtle)]/50 p-4">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium text-[var(--ink)]">
-          Android path rules
-        </p>
-        <button type="button" onClick={addRule} className="action-btn">
-          Add rule
+        <div className="flex items-center gap-2">
+          <span className="flex size-2 rounded-full bg-[var(--android-accent)]" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-[var(--ink)]">
+            Android Path Matching Rules
+          </p>
+          <span className="rounded-full bg-[var(--android-tint)] px-2 py-0.5 text-[10px] font-bold text-[var(--android-accent)] border border-[var(--android-border)]">
+            {rules.length} {rules.length === 1 ? "rule" : "rules"}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={addRule}
+          className="action-btn action-btn-android text-xs"
+        >
+          + Add Path Rule
         </button>
       </div>
-      <p className="text-xs text-[var(--muted)]">
-        Each rule becomes its own{" "}
-        <code className="font-mono text-[0.85em]">&lt;data&gt;</code> tag
-        (separate from scheme/host). For exact{" "}
-        <code className="font-mono text-[0.85em]">path</code>, an empty value
-        emits <code className="font-mono text-[0.85em]">android:path=&quot;&quot;</code>{" "}
-        (site root). Use{" "}
-        <code className="font-mono text-[0.85em]">pathPattern</code> for
-        patterns like{" "}
-        <code className="font-mono text-[0.85em]">/order/.*</code>. AASA-style
-        query globs are not modeled on Android{" "}
-        <code className="font-mono text-[0.85em]">&lt;data&gt;</code> tags —
-        configure those in iOS components instead. Use{" "}
-        <strong className="font-medium text-[var(--ink)]">Load sample data</strong>{" "}
-        above to fill every path mode at once.
+
+      <p className="text-xs leading-relaxed text-[var(--muted)]">
+        Each rule emits a dedicated{" "}
+        <code className="rounded bg-[var(--tint)] px-1 py-0.5 font-mono text-[0.8em] text-[var(--ink)]">&lt;data&gt;</code>{" "}
+        tag in AndroidManifest.xml. An empty exact path emits <code className="font-mono text-[0.8em]">android:path=&quot;&quot;</code> (site root).
       </p>
 
       <Show
         condition={rules.length > 0}
         fallback={
-          <p className="rounded-md border border-dashed border-[var(--line)] px-3 py-4 text-center text-sm text-[var(--muted)]">
-            No path rules — Manifest will match host + scheme only. Add a rule
-            or paste a test URL.
-          </p>
+          <div className="rounded-md border border-dashed border-[var(--line)] px-4 py-5 text-center text-xs text-[var(--muted)]">
+            No custom path rules configured. Manifest will match all paths under configured hosts.
+          </div>
         }
       >
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2.5">
           {rules.map((rule, index) => (
             <li
               key={`path-rule-${index}`}
-              className="flex flex-wrap items-end gap-2 rounded-md border border-[var(--line)] bg-[var(--surface)]/60 p-2"
+              className="flex flex-wrap items-end gap-2.5 rounded-lg border border-[var(--line)] bg-[var(--surface)] p-3 shadow-xs transition-colors hover:border-[var(--line-strong)]"
             >
-              <div className="flex min-w-[10rem] flex-1 flex-col gap-1">
+              <div className="flex min-w-[9.5rem] flex-1 flex-col gap-1">
                 <label
                   htmlFor={`path-mode-${index}`}
-                  className="text-xs font-medium text-[var(--muted)]"
+                  className="text-[11px] font-medium text-[var(--muted)]"
                 >
-                  Mode
+                  Matching Mode
                 </label>
                 <select
                   id={`path-mode-${index}`}
@@ -97,7 +96,7 @@ export function PathRulesEditor({ rules, onChange }: PathRulesEditorProps) {
                       mode: e.target.value as AndroidPathMode,
                     })
                   }
-                  className="field-input"
+                  className="field-input text-xs font-mono"
                 >
                   {MODE_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -109,9 +108,9 @@ export function PathRulesEditor({ rules, onChange }: PathRulesEditorProps) {
               <div className="flex min-w-[12rem] flex-[2] flex-col gap-1">
                 <label
                   htmlFor={`path-value-${index}`}
-                  className="text-xs font-medium text-[var(--muted)]"
+                  className="text-[11px] font-medium text-[var(--muted)]"
                 >
-                  Value
+                  Path Pattern Value
                 </label>
                 <input
                   id={`path-value-${index}`}
@@ -120,16 +119,16 @@ export function PathRulesEditor({ rules, onChange }: PathRulesEditorProps) {
                   value={rule.value}
                   onChange={(e) => updateRule(index, { value: e.target.value })}
                   placeholder={placeholderForMode(rule.mode)}
-                  className="field-input font-mono text-[0.85rem]"
+                  className="field-input font-mono text-xs"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => removeRule(index)}
-                className="action-btn mb-0.5"
+                className="action-btn text-xs hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-500"
                 aria-label={`Remove path rule ${index + 1}`}
               >
-                Remove
+                Delete
               </button>
             </li>
           ))}

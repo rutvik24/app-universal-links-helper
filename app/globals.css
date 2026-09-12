@@ -2,114 +2,254 @@
 
 :root {
   color-scheme: light;
-  --background: #f4f6f8;
-  --surface: #fbfcfd;
-  --ink: #14212b;
-  --muted: #5a6b78;
-  --line: #d5dde4;
-  --tint: #e8eef3;
-  --accent: #0f6e56;
-  --accent-fg: #f4fbf8;
-  --glow: color-mix(in srgb, #7eb8a4 35%, transparent);
-  --grid: color-mix(in srgb, #14212b 6%, transparent);
-  --code-bg: #0f1720;
-  --code-fg: #d7e0e8;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-subtle: #f1f5f9;
+  --surface-glass: rgba(255, 255, 255, 0.85);
+  --ink: #0f172a;
+  --ink-secondary: #334155;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --tint: #f1f5f9;
+  
+  /* Brand & Platform accents */
+  --accent: #0284c7;
+  --accent-fg: #ffffff;
+  --accent-glow: rgba(2, 132, 199, 0.15);
+  
+  --ios-accent: #0066cc;
+  --ios-tint: rgba(0, 102, 204, 0.08);
+  --ios-border: rgba(0, 102, 204, 0.2);
+  
+  --android-accent: #059669;
+  --android-tint: rgba(5, 150, 105, 0.08);
+  --android-border: rgba(5, 150, 105, 0.2);
+
+  --grid: rgba(15, 23, 42, 0.04);
+  --code-bg: #090d16;
+  --code-fg: #e2e8f0;
+  --code-line: #1e293b;
+  --code-accent: #38bdf8;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --background: #0c1218;
-  --surface: #131a22;
-  --ink: #e8eef3;
-  --muted: #8b9aab;
-  --line: #2a3540;
-  --tint: #1a2430;
-  --accent: #3daf8c;
-  --accent-fg: #061510;
-  --glow: color-mix(in srgb, #3daf8c 28%, transparent);
-  --grid: color-mix(in srgb, #e8eef3 7%, transparent);
-  --code-bg: #080c11;
-  --code-fg: #d7e0e8;
+  --background: #070a0f;
+  --surface: #0f172a;
+  --surface-subtle: #172033;
+  --surface-glass: rgba(15, 23, 42, 0.85);
+  --ink: #f8fafc;
+  --ink-secondary: #cbd5e1;
+  --muted: #94a3b8;
+  --line: #1e293b;
+  --line-strong: #334155;
+  --tint: #1e293b;
+  
+  /* Brand & Platform accents */
+  --accent: #38bdf8;
+  --accent-fg: #070a0f;
+  --accent-glow: rgba(56, 189, 248, 0.2);
+  
+  --ios-accent: #3b82f6;
+  --ios-tint: rgba(59, 130, 246, 0.12);
+  --ios-border: rgba(59, 130, 246, 0.3);
+  
+  --android-accent: #10b981;
+  --android-tint: rgba(16, 185, 129, 0.12);
+  --android-border: rgba(16, 185, 129, 0.3);
+
+  --grid: rgba(248, 250, 252, 0.03);
+  --code-bg: #030712;
+  --code-fg: #f3f4f6;
+  --code-line: #111827;
+  --code-accent: #38bdf8;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--ink);
-  --font-sans: var(--font-plex-sans), "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-sans: var(--font-plex-sans), "IBM Plex Sans", -apple-system, BlinkMacSystemFont, ui-sans-serif, sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--ink);
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
+/* Custom Input Styling */
 .field-input {
   width: 100%;
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   border: 1px solid var(--line);
-  background: var(--surface);
-  padding: 0.5rem 0.75rem;
+  background-color: var(--surface);
+  padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--ink);
   outline: none;
-  transition:
-    border-color 120ms ease,
-    box-shadow 120ms ease;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
 }
 
 .field-input::placeholder {
-  color: color-mix(in srgb, var(--muted) 75%, transparent);
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.field-input:hover:not(:focus) {
+  border-color: var(--line-strong);
 }
 
 .field-input:focus {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-sm);
 }
 
+/* Studio Button Styling */
 .action-btn {
-  border-radius: 0.375rem;
+  display: inline-flex;
+  items-center: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.5rem;
   border: 1px solid var(--line);
-  background: var(--surface);
-  padding: 0.25rem 0.625rem;
-  font-size: 0.75rem;
+  background-color: var(--surface);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--ink);
-  transition:
-    background 120ms ease,
-    border-color 120ms ease,
-    opacity 120ms ease;
+  color: var(--ink-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
 }
 
 .action-btn:hover:not(:disabled) {
-  background: var(--tint);
+  background-color: var(--tint);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .action-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .action-btn-primary {
-  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-  background: var(--accent);
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 85%, #000) 100%);
   color: var(--accent-fg);
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 .action-btn-primary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--accent) 88%, black);
+  opacity: 0.95;
+  box-shadow: 0 4px 12px var(--accent-glow);
+  color: var(--accent-fg);
+}
+
+.action-btn-ios {
+  border-color: var(--ios-border);
+  background-color: var(--ios-tint);
+  color: var(--ios-accent);
+  font-weight: 600;
+}
+
+.action-btn-ios:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--ios-accent) 20%, transparent);
+  border-color: var(--ios-accent);
+}
+
+.action-btn-android {
+  border-color: var(--android-border);
+  background-color: var(--android-tint);
+  color: var(--android-accent);
+  font-weight: 600;
+}
+
+.action-btn-android:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--android-accent) 20%, transparent);
+  border-color: var(--android-accent);
 }
 
 code {
   font-family: var(--font-mono);
 }
 
+.studio-card {
+  border-radius: 0.75rem;
+  border: 1px solid var(--line);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-md);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.studio-card-android {
+  border-left: 3px solid var(--android-accent);
+}
+
+.studio-card-ios {
+  border-left: 3px solid var(--ios-accent);
+}
+
+.studio-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background-color: var(--surface-subtle);
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+
 .page-grid {
   background-image:
     linear-gradient(to right, var(--grid) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* Custom Scrollbars for Code & Inputs */
+pre::-webkit-scrollbar,
+textarea::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+pre::-webkit-scrollbar-track,
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb {
+  background-color: var(--line-strong);
+  border-radius: 9999px;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s infinite ease-in-out;
 }

@@ -5,12 +5,12 @@ type AppLogoProps = {
   title?: string;
 };
 
-/** Chain-link mark for App Links Helper. Color via `currentColor`. */
-export function AppLogo({ className, title }: AppLogoProps) {
+/** High-tech dual-ring link mark for App Links Helper with gradient accents. */
+export function AppLogo({ className = "size-7", title }: AppLogoProps) {
   return (
     <svg
       className={className}
-      viewBox="0 0 32 32"
+      viewBox="0 0 36 36"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       role={title ? "img" : "presentation"}
@@ -20,24 +20,45 @@ export function AppLogo({ className, title }: AppLogoProps) {
       <Show condition={Boolean(title)}>
         <title>{title}</title>
       </Show>
+      <defs>
+        <linearGradient id="logo-grad-android" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#10B981" />
+          <stop offset="100%" stopColor="#059669" />
+        </linearGradient>
+        <linearGradient id="logo-grad-ios" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#38BDF8" />
+          <stop offset="100%" stopColor="#3B82F6" />
+        </linearGradient>
+        <filter id="logo-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.5" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      {/* Android Link Ring */}
       <rect
-        x="2.75"
+        x="3"
         y="10"
-        width="14.5"
-        height="10"
-        rx="5"
-        stroke="currentColor"
-        strokeWidth="2.5"
+        width="18"
+        height="12"
+        rx="6"
+        stroke="url(#logo-grad-android)"
+        strokeWidth="3"
+        filter="url(#logo-glow)"
       />
+      {/* iOS Link Ring */}
       <rect
-        x="14.75"
-        y="12"
-        width="14.5"
-        height="10"
-        rx="5"
-        stroke="currentColor"
-        strokeWidth="2.5"
+        x="15"
+        y="14"
+        width="18"
+        height="12"
+        rx="6"
+        stroke="url(#logo-grad-ios)"
+        strokeWidth="3"
+        filter="url(#logo-glow)"
       />
+      {/* Central Connector Node */}
+      <circle cx="18" cy="18" r="2.5" fill="#38BDF8" />
     </svg>
   );
 }
