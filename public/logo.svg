@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect x="2.75" y="10" width="14.5" height="10" rx="5" stroke="#0f6e56" stroke-width="2.5"/>
-  <rect x="14.75" y="12" width="14.5" height="10" rx="5" stroke="#0f6e56" stroke-width="2.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none">
+  <style>
+    .icon { stroke: #0f172a; fill: #0f172a; }
+    @media (prefers-color-scheme: dark) {
+      .icon { stroke: #f8fafc; fill: #f8fafc; }
+    }
+  </style>
+
+  <rect x="3" y="10" width="18" height="12" rx="6" class="icon" fill="none" stroke-width="3" />
+  <rect x="15" y="14" width="18" height="12" rx="6" class="icon" fill="none" stroke-width="3" />
+  <circle cx="18" cy="18" r="2.5" class="icon" stroke="none" />
 </svg>

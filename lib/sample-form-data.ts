@@ -78,22 +78,22 @@ export type SampleFormData = {
  */
 export function getSampleFormData(): SampleFormData {
   const teamId = "ABCDE12345";
-  const bundleId = "com.desiticketwala.app";
+  const bundleId = "com.example.app";
   const appId = `${teamId}.${bundleId}`;
 
   return {
     hostsText: [
-      "www.desiticketwala.com",
-      "ca.desiticketwala.com",
-      "develop.eventalkie.com",
-      "staging.eventalkie.com",
+      "www.example.com",
+      "app.example.com",
+      "develop.example.com",
+      "staging.example.com",
     ].join("\n"),
     schemeHttp: true,
     schemeHttps: true,
-    pasteUrl: "https://www.desiticketwala.com/view-ticket",
-    packageName: "com.desiticketwala.app",
+    pasteUrl: "https://www.example.com/view-ticket",
+    packageName: "com.example.app",
     fingerprints:
-      "14:6D:E9:83:C5:73:06:50:D8:EE:B9:95:2F:34:FC:64:16:A0:83:42:E6:1D:BE:A8:8A:04:96:B2:3F:CF:44:E5",
+      "14:6D:E9:83:C5:73:06:50:56:EE:B9:95:2F:45:FC:64:16:A0:83:42:E6:1D:BE:A8:8A:04:96:B2:3F:CF:44:E5",
     namespace: "android_app",
     relationHandleAll: true,
     relationLoginCreds: false,
